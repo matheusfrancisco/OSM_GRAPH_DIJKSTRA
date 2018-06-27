@@ -2,7 +2,7 @@
 ## Trabalho de Tópicos Especiais III
 ### Nome: Matheus Francisco Batista Machado
 
-
+##### OSM GPS USING PYTHON3
 
 ### Problem description :
 
@@ -16,3 +16,27 @@
 
 
 ## How to using this code.
+
+Using Python3:
+Install PIP3 or PIP if you have not installed
+https://pip.pypa.io/en/stable/installing/
+
+Install Libs if you have not installed
+https://docs.python.org/3.5/library/xml.sax.html
+https://networkx.github.io/
+https://matplotlib.org/
+https://scipy.github.io/old-wiki/pages/PyLab
+
+* sudo pip3 install xml.sax  or  sudo pip install xml.sax
+* sudo pip3 install networkx  or  sudo pip install networkx
+* sudo pip3 install matplotlibv or sudo pip install matplotlib
+* sudo pip3 install numpy or sudo pip install numpy
+* sudo pip3 install pylab or sudo pip install pylab
+
+
+## Using code
+https://www.openstreetmap.org/
+export on map.
+
+
+python3 mapa_osm_to_ploNetwork.py ararangua.osm
