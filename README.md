@@ -40,3 +40,5 @@ export on map.
 
 
 python3 mapa_osm_to_ploNetwork.py ararangua.osm
+
+<a img="https://github.com/matheusfrancisco/OSM_GRAPH_DIJKSTRA/blob/master/mapa.png"></a>
