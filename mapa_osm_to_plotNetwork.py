@@ -288,15 +288,21 @@ class MatplotLibMap:
         if self._fig is not None:
             plt.close(self._fig)
 
-        self._fig = plt.figure( figsize=(28,12), dpi=80, facecolor='grey', edgecolor='k')
+        self._fig = plt.figure(figsize=(18,35), dpi=80, facecolor='grey', edgecolor='k')
         self._fig.canvas.set_window_title("Dijkstra Algoritmo OSM")
 
-        self._render_axes0 = self._fig.add_subplot(231, autoscale_on = True, xlim = (minX,maxX), ylim = (minY,maxY))
+        ## Pra lembrar os plots
+        ## https://stackoverflow.com/questions/3584805/in-matplotlib-what-does-the-argument-mean-in-fig-add-subplot111#11404223
+        ## fig.add_subplot(221)   #top left
+		##fig.add_subplot(222)   #top right
+		###fig.add_subplot(223)   #bottom left
+		###fig.add_subplot(224)   #bottom right 
+        self._render_axes0 = self._fig.add_subplot(222,  xlim = (minX,maxX), ylim = (minY,maxY))
         self._render_axes0.xaxis.set_visible(False)
         self._render_axes0.yaxis.set_visible(False)
         plt.title("Dijkstra")
 
-        self._render_axes3 = self._fig.add_subplot(234, autoscale_on = True, xlim = (minX,maxX), ylim = (minY,maxY))
+        self._render_axes3 = self._fig.add_subplot(221,  xlim = (minX,maxX), ylim = (minY,maxY))
         self._render_axes3.xaxis.set_visible(False)
         self._render_axes3.yaxis.set_visible(False)
         plt.title("Resultado de Dijkstra")
@@ -327,7 +333,9 @@ class MatplotLibMap:
             wayType = None
             if 'highway' in wayTags.keys():
                 wayType = wayTags['highway']
-
+            #Link roads between different highways types
+            #https://wiki.openstreetmap.org/wiki/Link_roads_between_different_highways_types
+            # a ideia era pintar cada uma de uma cor
             if wayType in [
                            'primary',
                            'primary_link',
@@ -379,6 +387,7 @@ class MatplotLibMap:
         self._fig.canvas.mpl_connect('pick_event', self.__onclick__)
         plt.draw()
 
+    #Limpar o clique    
     def __clear_button_clicked__(self, event):
         self._node1 = None
         self._node2 = None
@@ -386,6 +395,7 @@ class MatplotLibMap:
         self._mouse_click2 = None
         self.render(self._osm, plot_nodes=False)
 
+    ## Funcao de onclick, pegar o clique no mouse
     def __onclick__(self, event):
         threshold = 0.001
         print("Mouse clicado")
@@ -395,12 +405,16 @@ class MatplotLibMap:
 
         if isinstance(event.artist, Line2D):
             thisline = event.artist
+            ## pega o x
             xdata = thisline.get_xdata()
+            ## pega o y
             ydata = thisline.get_ydata()
             ind = event.ind
+            #pontos para pegar o id do node
             point = (float(np.take(xdata, ind)[0]), float(np.take(ydata, ind)[0]))
             node_id = self._node_map[point]
 
+            # node1 é nulo então pega ponto
             if self._node1 is None:
                 self._node1 = Node(node_id, point[0], point[1])
                 self._mouse_click1 = (event.mouseevent.xdata, event.mouseevent.ydata)
@@ -424,7 +438,7 @@ class MatplotLibMap:
                     plt.plot(self._mouse_click2[0], self._mouse_click2[1], 'ro', zorder=100)
 
                 plt.draw()
-
+                # calcula a distantia  entre os dois cliques no mapa
                 path_dijkstra, paths_considered_dijkstra = calculo_distancia.dijkstra(self._graph, self._node1.id, self._node2.id)
                 
                 self.plot_path(self._get_axes('dijkstra', 'main'), path_dijkstra, MatplotLibMap.renderingRules['correct_path'], animate=False)
@@ -465,6 +479,8 @@ class MatplotLibMap:
                 plt.draw()
 
         plt.draw()
+
+
     ## Plota considerando as distancias 
     def plot_considered_paths(self, axes, path, *paths_considered_tuples):
         plt.sca(axes)
@@ -553,6 +569,7 @@ class MapInfo:
         x -= self.map_shiftX
 
         return x
+
 
 def get_points_from_node_ids(osm, path):
     edges = zip(path, path[1:])
